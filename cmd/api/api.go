@@ -1,10 +1,13 @@
 package main
 
 import (
+	"ampel-web/infra/loging"
+	"ampel-web/infra/middlware"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 )
 
@@ -15,10 +18,12 @@ var (
 		Short: "",
 		Long:  "",
 	}
+	logger zerolog.Logger
 )
 
 func init() {
 	rootCommand.Flags().IntVarP(&listenPort, "listen-port", "p", 8080, "this flags is used to set a listen port")
+	logger = loging.New()
 }
 
 func main() {
@@ -39,7 +44,7 @@ func configAssetsAndTemplates(router *gin.Engine) {
 
 func configRoute(router *gin.Engine) {
 	api := router.Group("/api")
-
+	api.Use(middlware.LogMiddleware(&logger))
 	api.GET("/health", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"Status": "alive",
