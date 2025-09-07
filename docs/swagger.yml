@@ -1,0 +1,76 @@
+openapi: '3.0.0'
+info:
+  title: Ampel-web API
+  description: WEB api to control ampel web ledzz
+  version: v0.0.1
+
+servers:
+  - http://localhost:8080
+
+paths:
+  /api/led/on:
+    post:
+      summary: Turn on led
+      description: Turn on led a color
+      requestBody:
+        description: this object is used to choice wich led you want to turn on
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/led-color"
+      resonses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-message"
+        '200':
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-message"
+
+  /api/led/off:
+    post:
+      summary: Turn off led
+      description: Turn off a color
+      requestBody:
+        description: this object is used to choice wich led you want to turn off
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/led-color"
+      resonses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-message"
+        '200':
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-message"
+        
+
+components:
+  schemas:
+    error-message:
+      type: object
+      properties:
+        error-message:
+          type: string
+
+    led-color:
+      type: object
+      properties:
+        color:
+          type: string
+          enum:
+            - green
+            - red
+            - orange
