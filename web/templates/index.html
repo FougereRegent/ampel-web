@@ -5,37 +5,66 @@
   <title>ampel-led</title>
   <link rel="stylesheet" type="text/css" href="/static/root.css"/>
   <link rel="stylesheet" type="text/css" href="/static/style.css"/>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body>
   <h1>Ampel led</h1>
   <div class="main-content">
       <div class="ampel">
-        <div class="ampel-led">
-          <div class="led led-red-disabled" 
-            hx-post="/api/led/on" 
-            hx-vals='{"color": "red"}'
-            hx-headers='{"Content-Type": "application/json"}' 
-            hx-ext="json-enc">
+        <div class="ampel-led" x-data="test">
+          <div class="led" :class="ledRedIsActive ? 'led-red' : 'led-red-disabled'" @click="sendCallApi('red')" x-transition>
           </div>
-          <div class="led led-orange-disabled" 
-            hx-post="/api/led/on"
-            hx-vals='{"color": "orange"}'
-            hx-headers='{"Content-Type": "application/json"}' 
-            hx-ext="json-enc">
+          <div class="led" :class="ledOrangeIsActive ? 'led-orange' : 'led-orange-disabled'" @click="sendCallApi('orange')" x-transition>
           </div>
-          <div class="led led-green-disabled" 
-            hx-post="/api/led/on"
-            hx-vals='{"color": "green"}'
-            hx-headers='{"Content-Type": "application/json"}' 
-            hx-ext="json-enc">
+          <div class="led" :class="ledGreenIsActive ? 'led-green': 'led-green-disabled'" @click="sendCallApi('green')" x-transition>
           </div>
         </div>
         <div class="ampel-stick">
         </div>
       </div>
+      <script>
+
+        function routeBuilder(state) {
+          if(state) {
+            return "/api/led/on"
+          } else {
+            return "/api/led/off"
+          }
+        } 
+
+        function sendRequest(url, data){
+          const request = new Request(url, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {'Content-Type': 'application/json'}
+          });
+
+          fetch(request);
+        }
+        document.addEventListener('alpine:init', () => {
+          Alpine.data('test', () => ({
+            ledGreenIsActive: false,
+            ledOrangeIsActive: false,
+            ledRedIsActive: false,
+            sendCallApi(colorLed) {
+              if(colorLed === "green"){
+                this.ledGreenIsActive = !this.ledGreenIsActive;
+                const route = routeBuilder(this.ledGreenIsActive);
+                sendRequest(route, {color: 'green'});
+              } else if (colorLed === "orange") {
+                this.ledOrangeIsActive = !this.ledOrangeIsActive;
+                const route = routeBuilder(this.ledOrangeIsActive);
+                sendRequest(route, {color: 'orange'});
+              } else if (colorLed === "red") {
+                this.ledRedIsActive = !this.ledRedIsActive;
+                const route = routeBuilder(this.ledRedIsActive);
+                sendRequest(route, {color: 'red'});
+              }
+            }
+          }))
+        })
+      </script>
   </div>
 </body>
-<script src="/static/htmx.min.js"></script>
-<script src="/static/json-enc.js"></script>
 </html>
