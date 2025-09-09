@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" hx-headers='{"Content-Type": "application/json"}'>
 
 <head>
   <meta charset="UTF-8" />
@@ -12,11 +12,23 @@
   <div class="main-content">
       <div class="ampel">
         <div class="ampel-led">
-          <div class="led led-red-disabled">
+          <div class="led led-red-disabled" 
+            hx-post="/api/led/on" 
+            hx-vals='{"color": "red"}'
+            hx-headers='{"Content-Type": "application/json"}' 
+            hx-ext="json-enc">
           </div>
-          <div class="led led-orange-disabled">
+          <div class="led led-orange-disabled" 
+            hx-post="/api/led/on"
+            hx-vals='{"color": "orange"}'
+            hx-headers='{"Content-Type": "application/json"}' 
+            hx-ext="json-enc">
           </div>
-          <div class="led led-green-disabled">
+          <div class="led led-green-disabled" 
+            hx-post="/api/led/on"
+            hx-vals='{"color": "green"}'
+            hx-headers='{"Content-Type": "application/json"}' 
+            hx-ext="json-enc">
           </div>
         </div>
         <div class="ampel-stick">
@@ -24,5 +36,6 @@
       </div>
   </div>
 </body>
-
+<script src="/static/htmx.min.js"></script>
+<script src="/static/json-enc.js"></script>
 </html>
